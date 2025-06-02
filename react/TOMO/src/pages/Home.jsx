@@ -70,8 +70,7 @@ const Home = () => {
         </Modal.Header>
         <Modal.Body className="d-flex flex-column gap-3">
           <Button
-            variant="light"
-            className="d-flex align-items-center gap-2 justify-content-center"
+            className="google-btn d-flex align-items-center gap-2 justify-content-center"
             onClick={() => handleSocialLogin("google")}
           >
             <img src="/assets/google.png" alt="Google" style={{ width: '20px', height: '20px' }} />
@@ -79,8 +78,7 @@ const Home = () => {
           </Button>
 
           <Button
-            style={{ backgroundColor: "#03C75A", color: "#fff" }}
-            className="d-flex align-items-center gap-2 justify-content-center"
+            className="naver-btn d-flex align-items-center gap-2 justify-content-center"
             onClick={() => handleSocialLogin("naver")}
           >
             <img src="/assets/naver.png" alt="Naver" style={{ width: '25px', height: '25px' }} />
@@ -88,8 +86,7 @@ const Home = () => {
           </Button>
 
           <Button
-            style={{ backgroundColor: "#FEE500", color: "#3C1E1E" }}
-            className="d-flex align-items-center gap-2 justify-content-center"
+            className="kakao-btn d-flex align-items-center gap-2 justify-content-center"
             onClick={() => handleSocialLogin("kakao")}
           >
             <img src="/assets/kakao.png" alt="Kakao" style={{ width: '25px', height: '25px' }} />

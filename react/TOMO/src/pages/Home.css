@@ -142,28 +142,39 @@ body {
 }
 
 /* 각각 다른 컬러 */
-button.google {
+button.google-btn {
   background-color: #ffffff;
   color: #444;
   border: 1px solid #ddd;
 }
 
-button.naver {
+button.google-btn:hover {
+  background-color: #f9a8d4;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  border: 1px solid #ddd;
+}
+
+button.naver-btn {
   background-color: #03C75A;
   color: white;
+  border: 1px solid #ddd;
 }
 
-.btn-naver:hover {
+button.naver-btn:hover {
   background-color: #02b04f;
+  border: 1px solid #ddd;
 }
 
-button.kakao {
+button.kakao-btn {
   background-color: #FEE500;
   color: #3C1E1E;
+  border: 1px solid #ddd;
 }
 
-.btn-kakao:hover {
+button.kakao-btn:hover {
   background-color: #e9d400;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  border: 1px solid #ddd;
 }
 
 /* 닫기 버튼 */
