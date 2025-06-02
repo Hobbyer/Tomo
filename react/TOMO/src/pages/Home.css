@@ -1,0 +1,80 @@
+
+/* 제목용 폰트 */
+@font-face {
+    font-family: 'Cafe24Decoshadow';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2405-3@1.1/Cafe24Decoshadow.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* 일반 폰트 */
+@font-face {
+  font-family: "S-CoreDream-3Light";
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-3Light.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+* {
+  font-family: "S-CoreDream-3Light";
+}
+
+.home-container {
+  background: linear-gradient(135deg, #aee2ff 0%, #ffc8dd 100%);
+  min-height: 100vh;
+  padding: 2rem;
+  font-family: "Pretendard", sans-serif;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.home-header {
+  text-align: center;
+  margin-top: 4rem;
+}
+
+.home-header h1 {
+  font-family: 'Cafe24Decoshadow';
+  margin-bottom: 0.5rem;
+  text-shadow: 2px 2px #cdb4db;
+  font-size: 3rem;
+  color: white;
+  font-weight: bold;
+}
+
+.home-header p {
+  font-size: 1.2rem;
+  color: #fff;
+}
+
+.home-main {
+  margin-top: 3rem;
+}
+
+.card {
+  background-color: #fff0f6;
+  border: 2px solid #ffc8dd;
+  border-radius: 20px;
+  padding: 2rem 3rem;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.card button {
+  margin-top: 1.5rem;
+  background-color: #aee2ff;
+  color: #333;
+  border: none;
+  padding: 0.8rem 1.6rem;
+  border-radius: 999px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.card button:hover {
+  background-color: #90d1f2;
+}
