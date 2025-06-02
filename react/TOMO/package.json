@@ -15,6 +15,7 @@
     "@emotion/css": "^11.13.5",
     "@slate-yjs/core": "^1.0.2",
     "@slate-yjs/react": "^1.1.0",
+    "@stomp/stompjs": "^7.1.1",
     "automerge-repo": "^0.1.0",
     "axios": "^1.9.0",
     "bootstrap": "^5.3.6",
@@ -30,6 +31,8 @@
     "slate-history": "^0.113.1",
     "slate-hyperscript": "^0.100.0",
     "slate-react": "^0.114.2",
+    "socket-client": "^1.0.0",
+    "sockjs-client": "^1.6.1",
     "y-websocket": "^3.0.0",
     "yjs": "^13.6.27"
   },
