@@ -24,5 +24,9 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/weather/, ''),
       }
     }
+  },
+  define: {
+    // "global"을 브라우저의 window 객체로 매핑해줘서 오류를 방지
+    global: 'window',
   }
 })
