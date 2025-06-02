@@ -5,6 +5,9 @@ import Home from './pages/Home'
 import SlateTest2 from './components/testfile/SlateTest2'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import EditorPage from './components/EditorPage'
+import Login from './pages/Login'
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 function App() {
 
@@ -16,6 +19,8 @@ function App() {
         <Route path='/slate-test2' element={<SlateTest2 />} />
 
         <Route path="editor" element={<EditorPage />} />
+        
+        <Route path='/auth/login' element={<Login />} />
       </Routes>
     </>
   )
