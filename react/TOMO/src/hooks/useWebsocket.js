@@ -34,7 +34,7 @@ export function useWebSocket(url, onMessageReceived) {
       stompClient.deactivate(); // 컴포넌트 언마운트 시 STOMP 클라이언트 비활성화
       setConnected(false);
     };
-  }, [url, onMessageReceived]);
+  }, [url]);
 
   // 3) 메시지 전송 함수
   const sendMessage = (destination, payload) => {
