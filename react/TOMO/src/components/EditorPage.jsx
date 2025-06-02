@@ -5,8 +5,8 @@ const EditorPage = () => {
   const [messages, setMessages] = useState([]);
 
   // 1) useWebSocket "/ws-edit" 엔드포인트와 메시지 핸들러 전달
-  const { connected, sendMessages } = useWebSocket(
-    "http://localhost:8080/ws-eidt",
+  const { connected, sendMessage } = useWebSocket(
+    "http://localhost:8080/ws-edit",
     (message) => {
       // 서버에서 브로드캐스트된 메시지를 화면에 추가
       setMessages((prev) => [...prev, message]);
@@ -16,11 +16,11 @@ const EditorPage = () => {
   // 2) 버튼 클릭시 "/app/edit" 으로 간단한 메시지 전송 예시
   const handleSend = () => {
     const payload = {
-      action: "eddit",
+      action: "edit",
       user: "yeob",
       payload: "새로운 편집 내용 예시",
     };
-    sendMessages("/app/edit", payload);
+    sendMessage("/app/edit", payload);
   };
   return (
     <>

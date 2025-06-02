@@ -3,8 +3,10 @@ package com._lumey.tomo.edit.controller;
 import lombok.Data;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.stereotype.Controller;
 
-@Data
+
+@Controller
 // 전형적인 STOMP 웹소켓 컨트롤러는 @Controller + @MessageMapping 어노테이션을 사용한다.
 public class EditController {
 
@@ -27,14 +29,15 @@ public class EditController {
   // ===============================================
   // 2) 메시지 바인딩용 DTO 클래스 (간단 예시)
   // ===============================================
+  @Data
   public static class EditMessage {
-    private String acition; // 예: "join", "leave", "update"
+    private String action; // 예: "join", "leave", "update"
     private String user; // 사용자 이름
     private String payload; // 실제 편집 내용 (예: JSON, 텍스트 등)
 
     public EditMessage() {}
     public EditMessage(String action, String user, String payload) {
-      this.acition = action;
+      this.action = action;
       this.user = user;
       this.payload = payload;
     }
