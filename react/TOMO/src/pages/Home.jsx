@@ -16,8 +16,15 @@ const Home = () => {
 
   return (
     <div className="home-container">
+      {/* 상단 헤더 */}
       <header className="home-header">
         <div className="header-top">
+          {/* TOMO 로고 이미지 */}
+          <img
+            src="/assets/favicon.png"
+            alt="TOMO 로고"
+            className="tomo-logo"
+          />
           <Button
             variant="outline-danger"
             className="login-btn"
@@ -26,10 +33,12 @@ const Home = () => {
             로그인
           </Button>
         </div>
+
         <h1>✨ TOMO ★ トモ ✨</h1>
         <p>서로의 생각이 연결되는 실시간 협업 툴 💬</p>
       </header>
 
+      {/* 카드 영역 */}
       <main className="home-main">
         <div className="card-grid">
           <div className="card">
@@ -73,7 +82,11 @@ const Home = () => {
             className="google-btn d-flex align-items-center gap-2 justify-content-center"
             onClick={() => handleSocialLogin("google")}
           >
-            <img src="/assets/google.png" alt="Google" style={{ width: '20px', height: '20px' }} />
+            <img
+              src="/assets/google.png"
+              alt="Google"
+              style={{ width: "20px", height: "20px" }}
+            />
             Google로 로그인
           </Button>
 
@@ -81,7 +94,11 @@ const Home = () => {
             className="naver-btn d-flex align-items-center gap-2 justify-content-center"
             onClick={() => handleSocialLogin("naver")}
           >
-            <img src="/assets/naver.png" alt="Naver" style={{ width: '25px', height: '25px' }} />
+            <img
+              src="/assets/naver.png"
+              alt="Naver"
+              style={{ width: "25px", height: "25px" }}
+            />
             Naver로 로그인
           </Button>
 
@@ -89,7 +106,11 @@ const Home = () => {
             className="kakao-btn d-flex align-items-center gap-2 justify-content-center"
             onClick={() => handleSocialLogin("kakao")}
           >
-            <img src="/assets/kakao.png" alt="Kakao" style={{ width: '25px', height: '25px' }} />
+            <img
+              src="/assets/kakao.png"
+              alt="Kakao"
+              style={{ width: "25px", height: "25px" }}
+            />
             Kakao로 로그인
           </Button>
         </Modal.Body>

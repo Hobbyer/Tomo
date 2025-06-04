@@ -9,21 +9,20 @@
 
 /* 일반 폰트 */
 @font-face {
-  font-family: "S-CoreDream-3Light";
-  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-3Light.woff")
-    format("woff");
-  font-weight: normal;
-  font-style: normal;
+    font-family: 'MonoplexKR-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_Monoplex-kr@1.0/MonoplexKR-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
 }
 
 * {
-  font-family: "S-CoreDream-3Light";
+  box-sizing: border-box;
+  font-family: 'MonoplexKR-Regular', sans-serif;
 }
 
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Pretendard', sans-serif;
   background: linear-gradient(135deg, #fde2f2, #e0f2ff); 
 }
 
@@ -31,7 +30,6 @@ body {
   padding: 2rem;
   min-height: 100vh;
   background: linear-gradient(135deg, #fde2f2, #e0f2ff);
-  font-family: 'Pretendard', sans-serif;
 }
 
 .card-grid {
@@ -49,10 +47,31 @@ body {
 }
 
 .header-top {
-  position: absolute;
-  top: 1.5rem;
-  right: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  margin-bottom: 1.5rem
 }
+
+.tomo-logo {
+  width: 130px;
+  height: auto;
+  animation: popIn 0.6s ease;
+}
+
+
+@keyframes popIn {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 
 .home-header h1 {
   font-family: 'Cafe24Decoshadow';
@@ -72,45 +91,53 @@ body {
 }
 
 .card {
-  background-color: #ffffff;
+  background: linear-gradient(145deg, #fff9fb, #f0f9ff);
   border: 2px solid #fcdde8;
-  border-radius: 1.2rem;
-  padding: 1.5rem;
+  border-radius: 1.5rem;
+  padding: 2rem 1.5rem;
   text-align: center;
-  box-shadow: 0 6px 18px rgba(224, 242, 255, 0.3);
-  transition: transform 0.2s ease;
+  box-shadow: 8px 8px 20px rgba(253, 222, 242, 0.3), -4px -4px 15px rgba(224, 242, 255, 0.3);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
 .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(253, 222, 242, 0.5);
+  transform: translateY(-6px) scale(1.015);
+  box-shadow: 10px 10px 25px rgba(253, 222, 242, 0.5), -5px -5px 20px rgba(224, 242, 255, 0.4);
 }
 
 .card h2 {
   color: #ec4899;
-  font-size: 1.4rem;
-  margin-bottom: 0.6rem;
+  font-size: 1.5rem;
+  margin-bottom: 0.8rem;
+  font-weight: 700;
 }
 
 .card p {
   color: #6b6b6b;
-  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  margin-bottom: 1.2rem;
 }
 
 .card button {
   background-color: #a5d8ff;
   color: #333;
-  padding: 0.6rem 1.2rem;
+  padding: 0.6rem 1.3rem;
   border: none;
-  border-radius: 1rem;
+  border-radius: 2rem;
   font-weight: bold;
+  font-size: 0.95rem;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .card button:hover {
   background-color: #f9a8d4;
+  transform: scale(1.05);
 }
+
+
 
 
 
