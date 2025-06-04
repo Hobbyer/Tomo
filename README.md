@@ -1,17 +1,17 @@
-<p align="center">
-  <img src="./favicon.png" alt="TOMO 로고" width="180"/>
-</p>
 
-<h1 align="center">🌈✨ TOMO ★ トモ ✨🌈</h1>
+<table>
+  <tr>
+    <td><img src="./favicon.png" alt="TOMO 로고" width="50"/></td>
+    <td><h1 style="margin: 0; padding-left: 10px;">✨ TOMO ★ トモ ✨</h1></td>
+  </tr>
+</table>
 
-<p align="center">
   👯‍♀️ 친구처럼 가까운 협업 툴 <br/>
   🫶 友達のように、気軽に使えるコラボツール
-</p>
 
-<p align="center">
-  🛠️ <strong>현재 개발 중!</strong> 기능과 구성은 계속 업데이트될 예정이에요 💫 <br/>
-  🚧 <strong>開発中</strong>：今後もどんどん進化していきます〜！
+
+  🛠️ **현재 개발 중!** 기능과 구성은 계속 업데이트될 예정이에요 💫 <br/>
+  🚧 **開発中**：今後もどんどん進化していきます〜！
 </p>
 
 <br>
