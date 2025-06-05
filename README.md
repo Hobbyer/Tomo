@@ -1,13 +1,20 @@
+<p align="left">
+  <img src="https://github.com/1uuuuuuuuuuuuuuumi/Tomo/blob/dev/assets/tomobanner.PNG?raw=true" width="500" />
+</p>
 
-<table>
-  <tr>
-    <td><img src="./favicon.png" alt="TOMO 로고" width="50"/></td>
-    <td><h1 style="margin: 0; padding-left: 10px;">✨ TOMO ★ トモ ✨</h1></td>
-  </tr>
-</table>
 
-  👯‍♀️ 친구처럼 가까운 협업 툴 <br/>
-  🫶 友達のように、気軽に使えるコラボツール
+
+> **친구처럼 가까운 실시간 협업툴, TOMO(トモ)입니다!** 💬✨  
+> 언제 어디서든 자연스럽고 편하게, 마치 친구처럼 이야기하듯 협업해보세요 💛  
+>  
+> **まるで友達のように使える、リアルタイムコラボツール「TOMO（トモ）」です！** 🗣🌸  
+> 気軽に、自然に、どこにいても楽しくコラボレーションできますよ〜！✨
+
+
+
+<br><br>
+
+
 
 
   🛠️ **현재 개발 중!** 기능과 구성은 계속 업데이트될 예정이에요 💫 <br/>
