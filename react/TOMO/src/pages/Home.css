@@ -9,72 +9,215 @@
 
 /* 일반 폰트 */
 @font-face {
-  font-family: "S-CoreDream-3Light";
-  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-3Light.woff")
-    format("woff");
-  font-weight: normal;
-  font-style: normal;
+    font-family: 'MonoplexKR-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_Monoplex-kr@1.0/MonoplexKR-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
 }
 
 * {
-  font-family: "S-CoreDream-3Light";
+  box-sizing: border-box;
+  font-family: 'MonoplexKR-Regular', sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, #fde2f2, #e0f2ff); 
 }
 
 .home-container {
-  background: linear-gradient(135deg, #aee2ff 0%, #ffc8dd 100%);
-  min-height: 100vh;
   padding: 2rem;
-  font-family: "Pretendard", sans-serif;
-  color: #333;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fde2f2, #e0f2ff);
 }
 
-.home-header {
-  text-align: center;
-  margin-top: 4rem;
+.card-grid {
+  margin-top: 2rem;
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 }
+
+
+.home-header {
+  position: relative;
+  padding: 2rem;
+  text-align: center;
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  margin-bottom: 1.5rem
+}
+
+.tomo-logo {
+  width: 130px;
+  height: auto;
+  animation: popIn 0.6s ease;
+}
+
+
+@keyframes popIn {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 
 .home-header h1 {
   font-family: 'Cafe24Decoshadow';
-  margin-bottom: 0.5rem;
-  text-shadow: 2px 2px #cdb4db;
-  font-size: 3rem;
-  color: white;
-  font-weight: bold;
+  font-size: 2.5rem;
+  color: #f472b6;
 }
 
 .home-header p {
   font-size: 1.2rem;
-  color: #fff;
+  color: #60a5fa;
 }
 
-.home-main {
-  margin-top: 3rem;
+.card-grid {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 }
 
 .card {
-  background-color: #fff0f6;
-  border: 2px solid #ffc8dd;
-  border-radius: 20px;
-  padding: 2rem 3rem;
+  background: linear-gradient(145deg, #fff9fb, #f0f9ff);
+  border: 2px solid #fcdde8;
+  border-radius: 1.5rem;
+  padding: 2rem 1.5rem;
   text-align: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 8px 8px 20px rgba(253, 222, 242, 0.3), -4px -4px 15px rgba(224, 242, 255, 0.3);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-6px) scale(1.015);
+  box-shadow: 10px 10px 25px rgba(253, 222, 242, 0.5), -5px -5px 20px rgba(224, 242, 255, 0.4);
+}
+
+.card h2 {
+  color: #ec4899;
+  font-size: 1.5rem;
+  margin-bottom: 0.8rem;
+  font-weight: 700;
+}
+
+.card p {
+  color: #6b6b6b;
+  font-size: 0.95rem;
+  margin-bottom: 1.2rem;
 }
 
 .card button {
-  margin-top: 1.5rem;
-  background-color: #aee2ff;
+  background-color: #a5d8ff;
   color: #333;
+  padding: 0.6rem 1.3rem;
   border: none;
-  padding: 0.8rem 1.6rem;
-  border-radius: 999px;
+  border-radius: 2rem;
   font-weight: bold;
+  font-size: 0.95rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .card button:hover {
-  background-color: #90d1f2;
+  background-color: #f9a8d4;
+  transform: scale(1.05);
+}
+
+
+
+
+
+
+
+/* 로그인 모달 */
+.social-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.social-buttons button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 0.8rem;
+  font-weight: bold;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.social-buttons img {
+  width: 20px;
+  height: 20px;
+}
+
+/* 각각 다른 컬러 */
+button.google-btn {
+  background-color: #ffffff;
+  color: #444;
+  border: 1px solid #ddd;
+}
+
+button.google-btn:hover {
+  background-color: #f9a8d4;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  border: 1px solid #ddd;
+}
+
+button.naver-btn {
+  background-color: #03C75A;
+  color: white;
+  border: 1px solid #ddd;
+}
+
+button.naver-btn:hover {
+  background-color: #02b04f;
+  border: 1px solid #ddd;
+}
+
+button.kakao-btn {
+  background-color: #FEE500;
+  color: #3C1E1E;
+  border: 1px solid #ddd;
+}
+
+button.kakao-btn:hover {
+  background-color: #e9d400;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  border: 1px solid #ddd;
+}
+
+/* 닫기 버튼 */
+.close-btn {
+  background-color: #f9a8d4;
+  color: white;
+  padding: 0.5rem 1.2rem;
+  border: none;
+  border-radius: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.login-btn {
+  padding: 0.4rem 1rem;
+  border-radius: 1rem;
+  font-weight: 600;
+  font-size: 0.9rem;
 }
