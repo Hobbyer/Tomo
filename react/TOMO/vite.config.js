@@ -15,14 +15,6 @@ export default defineConfig({
         // 요청 경로에서 '/api' 제거
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
-      '/weather': {
-        // 요청 전달 대상 서버 주소 설정
-        target: 'https://api.openweathermap.org/data/2.5/weather',
-        // 요청 헤더 host 필드 값을 대상 서버의 호스트 이름으로  변경
-        changeOrigin: true,
-        // 요청 경로에서 '/api' 제거
-        rewrite: (path) => path.replace(/^\/weather/, ''),
-      }
     }
   },
   define: {
