@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "yws": "y-websocket --port 1234",
+    "yws": "node ./node_modules/y-websocket/bin/server.js --port 1234",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
