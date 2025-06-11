@@ -1,0 +1,39 @@
+.breadcrumb-bar {
+  padding: 14px 24px;
+  background: linear-gradient(to right, #ffe6f0, #e6f7ff);
+  font-size: 14px;
+  border-bottom: 2px dashed #ffd6e8;
+  display: flex;
+  align-items: center;
+  font-family: 'Arial Rounded MT Bold', 'Apple SD Gothic Neo', sans-serif;
+  color: #444;
+}
+
+.breadcrumb-bar a {
+  text-decoration: none;
+  color: #ff69b4; /* 핑크 링크 */
+  transition: color 0.2s;
+}
+
+.breadcrumb-bar a:hover {
+  color: #ff3399;
+}
+
+.breadcrumb-bar .current {
+  font-weight: bold;
+  color: #007bff; /* 파란색 강조 */
+  background-color: #ffffffaa;
+  padding: 2px 6px;
+  border-radius: 8px;
+}
+
+.breadcrumb-bar .divider {
+  margin: 0 8px;
+  color: #ccc;
+  font-weight: bold;
+}
+
+.emoji {
+  margin-right: 8px;
+  font-size: 16px;
+}
