@@ -30,13 +30,17 @@ body {
   padding: 2rem;
   min-height: 100vh;
   /* max-width: 1280px; */
-  /* width: 100%; */
+  width: 100%;
   /* margin: 0 auto; */
   /* padding: 0 24px; */
   /* display: flex; */
   /* flex-direction: column; */
   /* align-items: center; */
   background: linear-gradient(135deg, #fde2f2, #e0f2ff);
+}
+
+.sidebar-open {
+  margin-left: 240px;
 }
 
 .card-grid {

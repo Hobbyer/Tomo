@@ -4,37 +4,3 @@
   margin-top: 56px; /* 헤더 높이만큼 내림 */
   min-width: 100vw;
 }
-
-.sidebar-container {
-  width: 240px;
-  min-width: 240px;
-  height: calc(100vh - 56px);
-  background-color: #fff;
-  border-right: 1px solid #eee;
-  position: relative; /* 🔒 플렉스 안에 고정 위치 */
-}
-
-.sidebar-container.hidden {
-  display: none;
-}
-
-
-.page-content {
-  flex: 1;
-  padding: 24px;
-  transition: margin-left 0.3s ease;
-}
-
-.page-content.shifted {
-  margin-left: 240; /* 사이드바가 이미 공간 차지했으니 별도로 안 밀어도 됨 */
-}
-
-@media (max-width: 768px) {
-  .sidebar-container {
-    display: none; /* 모바일에서는 사이드바 닫음 */
-  }
-
-  .page-content.shifted {
-    margin-left: 0;
-  }
-}

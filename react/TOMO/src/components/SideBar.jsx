@@ -34,20 +34,20 @@ const SideBar = ({show, setShow}) => {
   const location = useLocation();
 
   return (
-    <div>
+    <>
       {/* 📚 사이드바 Offcanvas */}
-      <Offcanvas
+      <div
         show={show}
         onHide={() => setShow(false)}
         backdrop={false}
         scroll={true}
         placement="start"
-        className="offcanvas-fixed"
+        className="offcanvas-sidebar"
       >
-        <Offcanvas.Header>
-          <Offcanvas.Title>🌟 TOMO</Offcanvas.Title>
-        </Offcanvas.Header>
-        <Offcanvas.Body>
+        <div>
+          <h3>🌟 TOMO</h3>
+        </div>
+        <div>
           {menuItems.map((section, idx) => (
             <div key={idx} className="sidebar-section">
               <div className="section-title">{section.section}</div>
@@ -69,9 +69,9 @@ const SideBar = ({show, setShow}) => {
               </ul>
             </div>
           ))}
-        </Offcanvas.Body>
-      </Offcanvas>
-    </div>
+        </div>
+      </div>
+    </>
   )
 };
 

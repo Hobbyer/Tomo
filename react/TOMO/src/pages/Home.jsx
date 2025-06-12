@@ -4,10 +4,10 @@ import "./Home.css";
 import { Button, Modal } from "react-bootstrap";
 
 const Home = () => {
-  const [show, setShow] = useState(false);
+  const [loginFormShow, setLoginFormShow] = useState(false);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleClose = () => setLoginFormShow(false);
+  const handleShow = () => setLoginFormShow(true);
 
   const handleSocialLogin = (provider) => {
     alert(`${provider} 로그인 시도 !`);
@@ -73,7 +73,7 @@ const Home = () => {
       </main>
 
       {/* ✅ 모달 시작 */}
-      <Modal show={show} onHide={handleClose} centered>
+      <Modal show={loginFormShow} onHide={handleClose} centered>
         <Modal.Header closeButton>
           <Modal.Title>소셜 로그인</Modal.Title>
         </Modal.Header>

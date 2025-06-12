@@ -1,12 +1,13 @@
-.offcanvas-fixed {
+.offcanvas-sidebar {
   width: 240px !important;
   min-width: 240px;
-  height: calc(100vh - 56px);
+  height: 100vh !important;
   background-color: #ffffff !important;
   border-right: 1px solid #eee;
-  position: static !important;
-  top: auto;
-  z-index: auto;
+  position: fixed !important;
+  top: 60px; /* 헤더 높이만큼 아래 */
+  left: 0;
+  overflow-y: auto;
 }
 
 .offcanvas-body {
