@@ -1,0 +1,81 @@
+.breadcrumb-bar {
+  padding: 10px 16px;
+  background: linear-gradient(to right, #ffe6f0, #e6f7ff);
+  font-size: 14px;
+  border-bottom: 2px dashed #ffd6e8;
+  display: flex;
+  align-items: center;
+  font-family: 'Arial Rounded MT Bold', 'Apple SD Gothic Neo', sans-serif;
+  color: #444;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1200; 
+}
+
+.hamburger-button {
+  margin-right: 12px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #555;
+  cursor: pointer;
+}
+
+.hamburger-button:hover {
+  color: #ff69b4;
+}
+
+
+.breadcrumb-bar a {
+  text-decoration: none;
+  color: #ff69b4; /* 핑크 링크 */
+  transition: color 0.2s;
+}
+
+.breadcrumb-bar a:hover {
+  color: #ff3399;
+}
+
+.breadcrumb-bar .current {
+  font-weight: bold;
+  color: #007bff; /* 파란색 강조 */
+  background-color: #ffffffaa;
+  padding: 2px 6px;
+  border-radius: 8px;
+}
+
+.breadcrumb-bar .divider {
+  margin: 0 8px;
+  color: #ccc;
+  font-weight: bold;
+}
+
+.emoji {
+  margin-right: 8px;
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  .breadcrumb-bar {
+    padding: 10px 16px;
+    font-size: 12px;
+    flex-wrap: wrap; /* 줄바꿈 가능하도록! */
+    row-gap: 6px;
+  }
+
+  .breadcrumb-bar .emoji {
+    font-size: 14px;
+    margin-right: 6px;
+  }
+
+  .breadcrumb-bar .divider {
+    margin: 0 4px;
+  }
+
+  .breadcrumb-bar .current {
+    font-size: 13px;
+    padding: 1px 4px;
+  }
+}
