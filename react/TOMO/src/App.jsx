@@ -7,23 +7,29 @@ import SlateEditor from "./components/SlateEditor";
 import BlockEditor from "./components/Editor/BlockEditor";
 import SideBar from "./components/SideBar";
 import Header from "./components/Header";
+import { useState } from "react";
+import DefaultLayout from "./components/layout/DefaultLayout";
 
 function App() {
+  const [showSidebar, setShowSidebar] = useState(false);
+
   return (
-    <div className="app-container">
-      {/* 상단 헤더 */}
-      <Header />
-      {/* 왼쪽 고정 사이드바 */}
-      <div className="page-content">
-        <Routes>
-          <Route path="/" element={<Home />} />
-
-          <Route path="edit" element={<SlateEditor />} />
-          <Route path="block-editor" element={<BlockEditor />} />
-
-          <Route path="/auth/login" element={<Login />} />
-        </Routes>
-      </div>
+    <div className="App">
+      <Routes>
+        <Route element={<DefaultLayout show={showSidebar} setShow={setShowSidebar} toggleSidebar={() => setShowSidebar(!showSidebar)} />} >
+          <Route
+            path="/"
+            element={<Home  />}
+          />
+          <Route path="/login" element={<Login />} />
+          <Route path="/editor" element={<SlateEditor />} />
+          <Route path="/block-editor" element={<BlockEditor />} />
+          <Route path="/my-docs" element={<div>내 문서 페이지</div>} />
+          <Route path="/create" element={<div>새 문서 만들기 페이지</div>} />
+          <Route path="/profile" element={<div>내 프로필 페이지</div>} />
+          <Route path="/settings" element={<div>환경 설정 페이지</div>} />
+        </Route>
+      </Routes>
     </div>
   );
 }
