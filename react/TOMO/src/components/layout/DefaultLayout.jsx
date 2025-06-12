@@ -4,6 +4,9 @@ import SideBar from "../SideBar";
 import { Outlet } from "react-router-dom";
 
 const DefaultLayout = ({ show, setShow, toggleSidebar }) => {
+
+  const sidebarOpen = (show ? "sidebar-open" : "none");
+
   return (
     <div>
       <Header toggleSidebar={toggleSidebar} />
@@ -13,7 +16,9 @@ const DefaultLayout = ({ show, setShow, toggleSidebar }) => {
           <SideBar show={show} setShow={setShow} />
         )}
         {/* 페이지 콘텐츠 영역 */}
-        <Outlet />
+        <div className={sidebarOpen}>
+          <Outlet />
+        </div>
       </div>
     </div>
   );

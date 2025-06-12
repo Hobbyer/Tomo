@@ -2,7 +2,6 @@ import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import Home from "./pages/Home";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Login from "./pages/Login";
 import SlateEditor from "./components/SlateEditor";
 import BlockEditor from "./components/Editor/BlockEditor";
 import SideBar from "./components/SideBar";
@@ -19,9 +18,8 @@ function App() {
         <Route element={<DefaultLayout show={showSidebar} setShow={setShowSidebar} toggleSidebar={() => setShowSidebar(!showSidebar)} />} >
           <Route
             path="/"
-            element={<Home  />}
+            element={<Home />}
           />
-          <Route path="/login" element={<Login />} />
           <Route path="/editor" element={<SlateEditor />} />
           <Route path="/block-editor" element={<BlockEditor />} />
           <Route path="/my-docs" element={<div>내 문서 페이지</div>} />
