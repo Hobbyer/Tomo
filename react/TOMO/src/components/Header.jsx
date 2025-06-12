@@ -12,7 +12,7 @@ const pathMap = {
   '/settings': '환경 설정',
 };
 
-const Header = () => {
+const Header = ({toggleSidebar}) => {
   const location = useLocation();
   const segments = location.pathname.split('/').filter(Boolean); // ['', 'my-docs'] → ['my-docs']
 
@@ -28,6 +28,10 @@ const Header = () => {
 
   return (
     <div className="breadcrumb-bar">
+      <button onClick={toggleSidebar} className="hamburger-button">
+        ☰
+      </button>
+
       <span className="emoji">📁</span>
       <Link to="/">홈</Link>
       {breadcrumb.map((b, i) => (

@@ -1,5 +1,5 @@
 .breadcrumb-bar {
-  padding: 14px 24px;
+  padding: 10px 16px;
   background: linear-gradient(to right, #ffe6f0, #e6f7ff);
   font-size: 14px;
   border-bottom: 2px dashed #ffd6e8;
@@ -7,7 +7,26 @@
   align-items: center;
   font-family: 'Arial Rounded MT Bold', 'Apple SD Gothic Neo', sans-serif;
   color: #444;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1200; 
 }
+
+.hamburger-button {
+  margin-right: 12px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #555;
+  cursor: pointer;
+}
+
+.hamburger-button:hover {
+  color: #ff69b4;
+}
+
 
 .breadcrumb-bar a {
   text-decoration: none;
@@ -36,4 +55,27 @@
 .emoji {
   margin-right: 8px;
   font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  .breadcrumb-bar {
+    padding: 10px 16px;
+    font-size: 12px;
+    flex-wrap: wrap; /* 줄바꿈 가능하도록! */
+    row-gap: 6px;
+  }
+
+  .breadcrumb-bar .emoji {
+    font-size: 14px;
+    margin-right: 6px;
+  }
+
+  .breadcrumb-bar .divider {
+    margin: 0 4px;
+  }
+
+  .breadcrumb-bar .current {
+    font-size: 13px;
+    padding: 1px 4px;
+  }
 }
