@@ -1,97 +1,236 @@
-// BlockEditor.jsx
-import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { Slate, Editable, withReact, ReactEditor } from 'slate-react';
-import { createEditor, Editor, Range } from 'slate';
+// NotionStyleEditor.jsx
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { Slate, Editable, withReact, ReactEditor, useSlate } from 'slate-react';
+import {
+  createEditor,
+  Editor,
+  Node,
+  Range,
+  Transforms,
+  Element as SlateElement,
+} from 'slate';
+import Highlight, { defaultProps } from 'prism-react-renderer';
+// Vite(E SM)에서는 .js 확장자를 명시해야 테마를 로드합니다
+import theme from 'prism-react-renderer/themes/github/index.js';
+import hljs from 'highlight.js';
 import { v4 as uuidv4 } from 'uuid';
-import { Bold, Italic, Underline } from 'lucide-react';
+import {
+  Bold,
+  Italic,
+  Underline,
+  Type as HeadingIcon, 
+  List as BulletedListIcon,
+  ListOrdered,
+  Quote,
+  Code as CodeIcon,
+} from 'lucide-react';
 
+// 초기 빈 블록 한 개
 const initialBlocks = [
   {
     id: uuidv4(),
     type: 'paragraph',
-    content: [
-      {
-        type: 'paragraph',
-        children: [{ text: 'Welcome to your Notion-style editor!' }],
-      },
-    ],
+    content: [{ type: 'paragraph', children: [{ text: '' }] }],
   },
 ];
 
-export default function BlockEditor() {
-  const [blocks, setBlocks] = useState(initialBlocks);
-  // 어느 블록에 자동 포커스할지 관리
-  const [focusBlockId, setFocusBlockId] = useState(initialBlocks[0].id);
+// 리스트 및 블록 토글 헬퍼
+const LIST_TYPES = ['numbered-list', 'bulleted-list'];
+function isBlockActive(editor, format) {
+  const [match] = Editor.nodes(editor, {
+    match: n =>
+      SlateElement.isElement(n) &&
+      n.type === (LIST_TYPES.includes(format) ? 'list-item' : format),
+  });
+  return !!match;
+}
+function toggleBlock(editor, format) {
+  const isActive = isBlockActive(editor, format);
+  const isList = LIST_TYPES.includes(format);
+  Transforms.unwrapNodes(editor, {
+    match: n => SlateElement.isElement(n) && LIST_TYPES.includes(n.type),
+    split: true,
+  });
+  Transforms.setNodes(editor, {
+    type: isActive ? 'paragraph' : isList ? 'list-item' : format,
+  });
+  if (!isActive && isList) {
+    Transforms.wrapNodes(editor, { type: format, children: [] });
+  }
+}
 
-  // Enter 입력 시 새 블록 생성 + 포커스 이동
-  const handleKeyDown = useCallback((e, blockId) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      const newId = uuidv4();
-      const newBlock = {
-        id: newId,
-        type: 'paragraph',
-        content: [
-          {
-            type: 'paragraph',
-            children: [{ text: '' }],
-          },
-        ],
-      };
-      // 블록 배열에 새 블록 삽입
-      setBlocks(prev => {
-        const idx = prev.findIndex(b => b.id === blockId);
-        const arr = [...prev];
-        arr.splice(idx + 1, 0, newBlock);
-        return arr;
-      });
-      // 생성된 블록으로 포커스 이동
-      setFocusBlockId(newId);
-    }
+// 메인 컴포넌트
+export default function NotionStyleEditor() {
+  const [blocks, setBlocks] = useState(initialBlocks);
+  const [focusBlockId, setFocusBlockId] = useState(initialBlocks[0].id);
+  const containerRef = useRef(null);
+  const blockRefs = useRef({});
+
+  // 특정 인덱스에 새 블록 삽입
+  const insertBlockAt = useCallback(index => {
+    const newId = uuidv4();
+    const newBlock = {
+      id: newId,
+      type: 'paragraph',
+      content: [{ type: 'paragraph', children: [{ text: '' }] }],
+    };
+    setBlocks(prev => {
+      const arr = [...prev];
+      arr.splice(index, 0, newBlock);
+      return arr;
+    });
+    setFocusBlockId(newId);
+  }, []);
+
+  // 블록 삭제 및 포커스 재배치
+  const deleteBlock = useCallback(blockId => {
+    setBlocks(prev => {
+      const idx = prev.findIndex(b => b.id === blockId);
+      const newArr = prev.filter(b => b.id !== blockId);
+      if (newArr.length) {
+        setFocusBlockId(idx > 0 ? prev[idx - 1].id : newArr[0].id);
+      }
+      return newArr;
+    });
   }, []);
 
   // 블록 내용 커밋
-  const updateBlockContent = useCallback((blockId, newContent) => {
-    if (!Array.isArray(newContent)) return;
+  const commitBlock = useCallback((id, content) => {
     setBlocks(prev =>
-      prev.map(b => (b.id === blockId ? { ...b, content: newContent } : b))
+      prev.map(b => (b.id === id ? { ...b, content } : b))
     );
   }, []);
 
+  // 페이지 빈 공간 클릭 시 적절한 위치에 블록 삽입
+  const handleContainerClick = useCallback(
+    e => {
+      if (e.target !== containerRef.current) return;
+      const y = e.clientY;
+      const ids = blocks.map(b => b.id);
+      const rects = ids.map(
+        id => blockRefs.current[id]?.getBoundingClientRect() ?? { bottom: 0 }
+      );
+      let idx = rects.findIndex(r => y < r.bottom);
+      if (idx === -1) idx = blocks.length;
+      insertBlockAt(idx);
+    },
+    [blocks, insertBlockAt]
+  );
+
   return (
-    <div style={{ padding: '2rem' }}>
-      {blocks.map(block => (
-        <Block
+    <div
+      ref={containerRef}
+      onClick={handleContainerClick}
+      style={{ minHeight: '100vh' }}
+    >
+      {blocks.map((block, i) => (
+        <div
           key={block.id}
-          block={block}
-          autoFocus={block.id === focusBlockId}
-          onKeyDown={e => handleKeyDown(e, block.id)}
-          onCommit={val => updateBlockContent(block.id, val)}
-        />
+          ref={el => (blockRefs.current[block.id] = el)}
+        >
+          <Block
+            block={block}
+            autoFocus={block.id === focusBlockId}
+            onInsert={() => insertBlockAt(i + 1)}
+            onDelete={() => deleteBlock(block.id)}
+            onCommit={c => commitBlock(block.id, c)}
+          />
+        </div>
       ))}
     </div>
   );
 }
 
-function Block({ block, onKeyDown, onCommit, autoFocus }) {
+// 개별 블록 컴포넌트
+function Block({ block, autoFocus, onInsert, onDelete, onCommit }) {
   const editor = useMemo(() => withReact(createEditor()), []);
-  const refContent = useRef(block.content);
+  const contentRef = useRef(block.content);
   const [showToolbar, setShowToolbar] = useState(false);
   const [toolbarPos, setToolbarPos] = useState({ top: 0, left: 0 });
 
-  const renderElement = useCallback(
-    props => <p {...props.attributes}>{props.children}</p>,
-    []
-  );
-  const renderLeaf = useCallback(
-    props => <span {...props.attributes}>{props.children}</span>,
-    []
-  );
-
-  const handleChange = useCallback(newVal => {
-    refContent.current = newVal;
+  // 엘리먼트 렌더러
+  const renderElement = useCallback(props => {
+    const { element, attributes, children } = props;
+    switch (element.type) {
+      case 'code': {
+        // highlight.js로 언어 감지
+        const codeString = Node.string(element);
+        const { language = 'javascript' } = hljs.highlightAuto(codeString);
+        // Prism React Renderer로 렌더링
+        return (
+          <Highlight
+            {...defaultProps}
+            code={codeString}
+            language={language}
+            theme={theme}
+          >
+            {({ className, style, tokens, getLineProps, getTokenProps }) => (
+              <pre className={className} style={style} {...attributes}>
+                {tokens.map((line, i) => (
+                  <div key={i} {...getLineProps({ line, key: i })}>
+                    {line.map((token, key) => (
+                      <span key={key} {...getTokenProps({ token, key })} />
+                    ))}
+                  </div>
+                ))}
+              </pre>
+            )}
+          </Highlight>
+        );
+      }
+      case 'block-quote':
+        return <blockquote {...attributes}>{children}</blockquote>;
+      case 'numbered-list':
+        return <ol {...attributes}>{children}</ol>;
+      case 'bulleted-list':
+        return <ul {...attributes}>{children}</ul>;
+      case 'list-item':
+        return <li {...attributes}>{children}</li>;
+      case 'heading-one':
+        return <h1 {...attributes}>{children}</h1>;
+      case 'heading-two':
+        return <h2 {...attributes}>{children}</h2>;
+      case 'heading-three' :
+        return <h3 {...attributes}>{children}</h3>;
+      case 'heading-four':
+        return <h4 {...attributes}>{children}</h4>;
+      case 'heading-five':
+        return <h5 {...attributes}>{children}</h5>;
+      case 'heading-six':
+        return <h6 {...attributes}>{children}</h6>;
+      default:
+        return <p {...attributes}>{children}</p>;
+    }
   }, []);
 
+  // Leaf 렌더러 (볼드/이탤릭/밑줄)
+  const renderLeaf = useCallback(props => {
+    let el = props.children;
+    if (props.leaf.bold) el = <strong {...props.attributes}>{el}</strong>;
+    if (props.leaf.italic) el = <em {...props.attributes}>{el}</em>;
+    if (props.leaf.underline)
+      el = <u {...props.attributes}>{el}</u>;
+    return <span {...props.attributes}>{el}</span>;
+  }, []);
+
+  // 변화 저장
+  const handleChange = useCallback(val => {
+    contentRef.current = val;
+  }, []);
+
+  // 블러 시 커밋
+  const handleBlur = useCallback(() => {
+    onCommit(contentRef.current);
+    setShowToolbar(false);
+  }, [onCommit]);
+
+  // 툴바 업데이트
   const updateToolbar = useCallback(() => {
     const { selection } = editor;
     if (selection && Range.isExpanded(selection)) {
@@ -111,87 +250,157 @@ function Block({ block, onKeyDown, onCommit, autoFocus }) {
     }
   }, [editor]);
 
-  const handleBlur = useCallback(() => {
-    onCommit(refContent.current);
-  }, [onCommit]);
+  // 자동 포커스 시 커서 이동
+  useEffect(() => {
+    if (autoFocus) {
+      ReactEditor.focus(editor);
+      Transforms.select(editor, Editor.start(editor, []));
+    }
+  }, [autoFocus, editor]);
 
-  const isMarkActive = format => Editor.marks(editor)?.[format] === true;
-  const toggleMark = format => {
-    isMarkActive(format)
-      ? Editor.removeMark(editor, format)
-      : Editor.addMark(editor, format, true);
-  };
+  // 선택 해제 시 툴바 숨김
+  useEffect(() => {
+    if (!editor.selection || Range.isCollapsed(editor.selection)) {
+      setShowToolbar(false);
+    }
+  }, [editor.selection]);
+
+  // 키 이벤트 (Enter, Shift+Enter, Backspace, 단축키)
+  const handleKeyDown = useCallback(
+    e => {
+      const text = Editor.string(editor, []);
+      const sel = editor.selection;
+      // 빈 블록에서 Backspace → 삭제
+      if (
+        e.key === 'Backspace' &&
+        sel &&
+        Range.isCollapsed(sel) &&
+        sel.anchor.offset === 0 &&
+        text === ''
+      ) {
+        e.preventDefault();
+        onDelete();
+        return;
+      }
+      // Shift+Enter 줄바꿈
+      if (e.key === 'Enter' && e.shiftKey) {
+        e.preventDefault();
+        Editor.insertText(editor, '\n');
+        return;
+      }
+      // Enter 새 블록
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        onInsert();
+        return;
+      }
+      // Ctrl/Cmd+B, I, U 마크 토글
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b') {
+        e.preventDefault();
+        const marks = Editor.marks(editor) || {};
+        marks.bold
+          ? Editor.removeMark(editor, 'bold')
+          : Editor.addMark(editor, 'bold', true);
+        return;
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'i') {
+        e.preventDefault();
+        const marks = Editor.marks(editor) || {};
+        marks.italic
+          ? Editor.removeMark(editor, 'italic')
+          : Editor.addMark(editor, 'italic', true);
+        return;
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'u') {
+        e.preventDefault();
+        const marks = Editor.marks(editor) || {};
+        marks.underline
+          ? Editor.removeMark(editor, 'underline')
+          : Editor.addMark(editor, 'underline', true);
+        return;
+      }
+    },
+    [editor, onDelete, onInsert]
+  );
 
   return (
-    <div style={{ position: 'relative', marginBottom: '1rem' }}>
-      {showToolbar && (
-        <div
-          style={{
-            position: 'absolute',
-            top: toolbarPos.top,
-            left: toolbarPos.left,
-            display: 'flex',
-            gap: '0.25rem',
-            background: 'white',
-            padding: '0.25rem 0.5rem',
-            borderRadius: '4px',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-            zIndex: 1000,
-          }}
-        >
-          <button
-            onMouseDown={e => e.preventDefault()}
-            onClick={() => toggleMark('bold')}
+    <Slate
+      editor={editor}
+      initialValue={block.content}
+      onChange={handleChange}
+    >
+      <div style={{ position: 'relative', marginBottom: '1rem' }}>
+        {showToolbar && (
+          <div
             style={{
-              background: isMarkActive('bold') ? '#eee' : 'transparent',
-              border: 'none',
-              padding: 4,
-              borderRadius: 3,
-              cursor: 'pointer',
+              position: 'absolute',
+              top: toolbarPos.top,
+              left: toolbarPos.left,
+              display: 'flex',
+              gap: '0.25rem',
+              background: 'white',
+              padding: '0.25rem 0.5rem',
+              borderRadius: '4px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+              zIndex: 1000,
             }}
-            title="Bold"
           >
-            <Bold size={16} />
-          </button>
-          <button
-            onMouseDown={e => e.preventDefault()}
-            onClick={() => toggleMark('italic')}
-            style={{
-              background: isMarkActive('italic') ? '#eee' : 'transparent',
-              border: 'none',
-              padding: 4,
-              borderRadius: 3,
-              cursor: 'pointer',
-            }}
-            title="Italic"
-          >
-            <Italic size={16} />
-          </button>
-          <button
-            onMouseDown={e => e.preventDefault()}
-            onClick={() => toggleMark('underline')}
-            style={{
-              background: isMarkActive('underline') ? '#eee' : 'transparent',
-              border: 'none',
-              padding: 4,
-              borderRadius: 3,
-              cursor: 'pointer',
-            }}
-            title="Underline"
-          >
-            <Underline size={16} />
-          </button>
-        </div>
-      )}
-
-      <Slate editor={editor} initialValue={block.content} onChange={handleChange}>
+            <ToolbarMarkButton format="bold" icon={<Bold size={16} />} />
+            <ToolbarMarkButton format="italic" icon={<Italic size={16} />} />
+            <ToolbarMarkButton
+              format="underline"
+              icon={<Underline size={16} />}
+            />
+            <ToolbarBlockButton
+              format="heading-one"
+              icon={<HeadingIcon size={16} />}
+            />
+            <ToolbarBlockButton
+              format="heading-two"
+              icon={<HeadingIcon size={14} />}
+            />
+            <ToolbarBlockButton
+              format="heading-three"
+              icon={<HeadingIcon size={12} />}
+            />
+            <ToolbarBlockButton
+              format={"heading-four"}
+              icon={<HeadingIcon size={10} />}
+            />
+            <ToolbarBlockButton
+              format="heading-five"
+              icon={<HeadingIcon size={8} />}
+            />
+            <ToolbarBlockButton
+              format="heading-six"
+              icon={<HeadingIcon size={6} />}
+            />
+            <ToolbarBlockButton
+              format="code"
+              icon={<CodeIcon size={16} />}
+            />
+            <ToolbarBlockButton
+              format="block-quote"
+              icon={<Quote size={16} />}
+            />
+            <ToolbarBlockButton
+              format="numbered-list"
+              icon={<ListOrdered size={16} />}
+            />
+            <ToolbarBlockButton
+              format="bulleted-list"
+              icon={<BulletedListIcon size={16} />}
+            />
+          </div>
+        )}
         <Editable
           renderElement={renderElement}
           renderLeaf={renderLeaf}
-          onKeyDown={onKeyDown}
+          onKeyDown={handleKeyDown}
           onBlur={handleBlur}
           onMouseUp={updateToolbar}
           onKeyUp={updateToolbar}
+          onClick={updateToolbar}
           spellCheck
           autoFocus={autoFocus}
           style={{
@@ -201,7 +410,58 @@ function Block({ block, onKeyDown, onCommit, autoFocus }) {
             minHeight: '2rem',
           }}
         />
-      </Slate>
-    </div>
+      </div>
+    </Slate>
   );
 }
+
+// 마크 버튼 컴포넌트
+const ToolbarMarkButton = ({ format, icon }) => {
+  const editor = useSlate();
+  const marks = Editor.marks(editor) || {};
+  const isActive = marks[format] === true;
+  return (
+    <button
+      onMouseDown={e => {
+        e.preventDefault();
+        isActive
+          ? Editor.removeMark(editor, format)
+          : Editor.addMark(editor, format, true);
+      }}
+      style={{
+        background: isActive ? '#eee' : 'transparent',
+        border: 'none',
+        padding: 4,
+        borderRadius: 3,
+        cursor: 'pointer',
+      }}
+      title={format}
+    >
+      {icon}
+    </button>
+  );
+};
+
+// 블록 버튼 컴포넌트
+const ToolbarBlockButton = ({ format, icon }) => {
+  const editor = useSlate();
+  const isActive = isBlockActive(editor, format);
+  return (
+    <button
+      onMouseDown={e => {
+        e.preventDefault();
+        toggleBlock(editor, format);
+      }}
+      style={{
+        background: isActive ? '#eee' : 'transparent',
+        border: 'none',
+        padding: 4,
+        borderRadius: 3,
+        cursor: 'pointer',
+      }}
+      title={format}
+    >
+      {icon}
+    </button>
+  );
+};

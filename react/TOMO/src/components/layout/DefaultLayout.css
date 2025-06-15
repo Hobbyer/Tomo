@@ -1,6 +1,0 @@
-.layout-body {
-  display: flex;
-  position: relative;
-  margin-top: 56px; /* 헤더 높이만큼 내림 */
-  min-width: 100vw;
-}
