@@ -2,8 +2,11 @@
   width: 240px !important;
   min-width: 240px;
   height: 100vh !important;
-  background-color: #ffffff !important;
-  border-right: 1px solid #eee;
+  background-color: rgba(255, 255, 255, 0.6) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(12px); /* Safari 대응 */
+  border-right: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 4px 0 12px rgba(0, 0, 0, 0.05);
   position: fixed !important;
   top: 60px; /* 헤더 높이만큼 아래 */
   left: 0;
@@ -41,7 +44,7 @@
   display: flex;
   align-items: center;
   padding: 8px 12px;
-  border-radius: 6px;
+  border-radius: 8px;
   text-decoration: none;
   color: #333;
   white-space: nowrap;
@@ -49,7 +52,8 @@
 }
 
 .sidebar-link:hover {
-  background-color: #f5f5f5;
+  background-color: rgba(208, 242, 255, 0.5);
+  color: #007ea7;
 }
 
 .sidebar-link.active {
