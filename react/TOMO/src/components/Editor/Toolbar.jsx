@@ -1,7 +1,7 @@
 import React from 'react';
 import MarkButton from './MarkButton';
 import BlockButton from './BlockButton';
-import { Bold, Italic, Underline, HeadingIcon, BulletedListIcon, ListOrdered, Quote, CodeIcon } from 'lucide-react';
+import { Bold, Italic, Underline, Type as HeadingIcon, List as BulletedListIcon, ListOrdered, Quote, CodeIcon } from 'lucide-react';
 
 export default function Toolbar() {
   return (

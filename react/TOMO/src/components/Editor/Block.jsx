@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Slate, Editable, ReactEditor } from 'slate-react';
-import { Editor, Range, Transforms } from 'slate';
+import { Editor, Element, Range, Transforms } from 'slate';
 import { createEditorWithPaste } from '../utils/editor';
 import Toolbar from './Toolbar';
 import CodeElement from '../renderers/CodeElement';
@@ -8,6 +8,10 @@ import DefaultElement from '../renderers/DefaultElement';
 import Leaf from '../renderers/Leaf';
 
 export default function Block({block, autoFocus, onInsert, onDelete, onCommit}) {
+  if (!block) {
+    return null;
+  }
+
   const editor = useRef(createEditorWithPaste()).current;
   const contentRef = useRef(block.content);
   const [show, setShow] = useState(false);
@@ -19,7 +23,7 @@ export default function Block({block, autoFocus, onInsert, onDelete, onCommit}) 
     const { selection } = editor;
     if (selection && Range.isExpanded(selection)) {
       const domRange = ReactEditor.toDOMRange(editor, selection);
-      const rect = domRange.getBoundingClientReact();
+      const rect = domRange.getBoundingClientRect();
       setPos({ top: rect.top - 45 + window.scrollY, left: rect.left + window.scrollX });
       setShow(true);
     } else {
@@ -30,16 +34,65 @@ export default function Block({block, autoFocus, onInsert, onDelete, onCommit}) 
   useEffect(() => { if (!editor.selection || Range.isCollapsed(editor.selection)) setShow(false); }, [editor.selection]);
 
   const handleKeyDown = useCallback(e => {
+    // 1) 리스트 항목 내부에서 Enter -> 새로운 리스트 아이템으로 분할
+    const [listItemEntry] = Editor.nodes(editor, {
+      match: n => Element.isElement(n) && n.type === 'list-item',
+    });
+    if (listItemEntry && e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      
+      // 현재 node(list-item)를 커서 위치에서 분할(split)해서 동일한 list-item이 자동으로 이어지도록 함.
+      Transforms.splitNodes(editor, {
+        match: n => Element.isElement(n) && n.type === 'list-item',
+        always: true,
+      });
+      return;
+    }
+
+    // 2) 코드 블록 내부에서 Enter -> 줄바꿈
     const [inCode] = Editor.nodes(editor, { match: n => n.type === 'code' });
-    if (inCode && e.key === 'Enter') { e.preventDefault(); Editor.insertText(editor, '\n'); return; }
+    if (inCode && e.key === 'Enter') { 
+      e.preventDefault();
+      Editor.insertText(editor, '\n');
+      return; 
+    }
+
+    // 3) 일반 텍스트 블록에서 Enter/Shift+Enter/Backspace -> 블록 추가/줄바꿈/블록삭제
     const text = Editor.string(editor, []);
     const sel = editor.selection;
-    if (e.key === 'Backspace' && sel && Range.isCollapsed(sel) && sel.anchor.offset === 0 && text === '') { e.preventDefault(); onDelete(); return; }
-    if (e.key === 'Enter' && e.shiftKey) { e.preventDefault(); Editor.insertText(editor, '\n'); return; }
-    if (e.key === 'Enter') { e.preventDefault(); onInsert(); return; }
-    if ((e.ctrlKey||e.metaKey) && e.key==='b') { e.preventDefault(); const m=Editor.marks(editor)||{}; m.bold?Editor.removeMark(editor,'bold'):Editor.addMark(editor,'bold',true); return; }
-    if ((e.ctrlKey||e.metaKey) && e.key==='i') { e.preventDefault(); const m=Editor.marks(editor)||{}; m.italic?Editor.removeMark(editor,'italic'):Editor.addMark(editor,'italic',true); return; }
-    if ((e.ctrlKey||e.metaKey) && e.key==='u') { e.preventDefault(); const m=Editor.marks(editor)||{}; m.underline?Editor.removeMark(editor,'underline'):Editor.addMark(editor,'underline',true); return; }
+    if (e.key === 'Backspace' && sel && Range.isCollapsed(sel) && sel.anchor.offset === 0 && text === '') {
+      e.preventDefault();
+      onDelete();
+      return;
+    }
+    if (e.key === 'Enter' && e.shiftKey) {
+      e.preventDefault();
+      Editor.insertText(editor, '\n');
+      return;
+    }
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      onInsert();
+      return;
+    }
+    if ((e.ctrlKey||e.metaKey) && e.key==='b') {
+      e.preventDefault();
+      const m=Editor.marks(editor)||{};
+      m.bold?Editor.removeMark(editor,'bold'):Editor.addMark(editor,'bold',true);
+      return;
+    }
+    if ((e.ctrlKey||e.metaKey) && e.key==='i') {
+      e.preventDefault();
+      const m=Editor.marks(editor)||{};
+      m.italic?Editor.removeMark(editor,'italic'):Editor.addMark(editor,'italic',true);
+      return;
+    }
+    if ((e.ctrlKey||e.metaKey) && e.key==='u') {
+      e.preventDefault();
+      const m=Editor.marks(editor)||{};
+      m.underline?Editor.removeMark(editor,'underline'):Editor.addMark(editor,'underline',true);
+      return;
+    }
   }, [editor, onDelete, onInsert]);
 
   return (

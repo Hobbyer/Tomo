@@ -1,6 +1,8 @@
 import { createEditor, Editor, Element, Transforms } from "slate";
 import { withReact } from "slate-react";
-import { LIST_TYPES } from "./constants";
+import { LIST_TYPES } from "./contents";
+import { deserialize } from "./deserialize";
+
 
 // 에디터 생성 및 붙여넣기 처리
 export function createEditorWithPaste() {

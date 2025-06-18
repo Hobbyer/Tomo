@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSlate } from 'slate-react';
-import { isBlockActive, toggleBlock } from '../../utils/editorUtils';
+import { isBlockActive, toggleBlock } from '../utils/editor';
 
 export default function BlockButton({ format, icon }) {
   const editor = useSlate();
