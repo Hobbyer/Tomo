@@ -8,6 +8,8 @@ import SideBar from "./components/SideBar";
 import Header from "./components/Header";
 import { useState } from "react";
 import DefaultLayout from "./components/layout/DefaultLayout";
+import Block from "./components/editor/Block";
+import NotionStyleEditor from "./components/editor/NotionStyleEditor";
 
 function App() {
   const [showSidebar, setShowSidebar] = useState(false);
@@ -21,7 +23,7 @@ function App() {
             element={<Home />}
           />
           <Route path="/editor" element={<SlateEditor />} />
-          <Route path="/block-editor" element={<BlockEditor />} />
+          <Route path="/block-editor" element={<NotionStyleEditor />} />
           <Route path="/my-docs" element={<div>내 문서 페이지</div>} />
           <Route path="/create" element={<div>새 문서 만들기 페이지</div>} />
           <Route path="/profile" element={<div>내 프로필 페이지</div>} />

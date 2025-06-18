@@ -1,11 +1,5 @@
 // NotionStyleEditor.jsx
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Slate, Editable, withReact, ReactEditor, useSlate } from 'slate-react';
 import {
   createEditor,
@@ -16,7 +10,6 @@ import {
   Element as SlateElement,
 } from 'slate';
 import Highlight, { defaultProps } from 'prism-react-renderer';
-// Vite(E SM)에서는 .js 확장자를 명시해야 테마를 로드합니다
 import theme from 'prism-react-renderer/themes/github/index.js';
 import hljs from 'highlight.js';
 import { v4 as uuidv4 } from 'uuid';
@@ -24,7 +17,7 @@ import {
   Bold,
   Italic,
   Underline,
-  Type as HeadingIcon, 
+  Type as HeadingIcon,
   List as BulletedListIcon,
   ListOrdered,
   Quote,
@@ -65,7 +58,6 @@ function toggleBlock(editor, format) {
   }
 }
 
-// 메인 컴포넌트
 export default function NotionStyleEditor() {
   const [blocks, setBlocks] = useState(initialBlocks);
   const [focusBlockId, setFocusBlockId] = useState(initialBlocks[0].id);
@@ -107,7 +99,7 @@ export default function NotionStyleEditor() {
     );
   }, []);
 
-  // 페이지 빈 공간 클릭 시 적절한 위치에 블록 삽입
+  // 빈 공간 클릭 시 새 블록 삽입
   const handleContainerClick = useCallback(
     e => {
       if (e.target !== containerRef.current) return;
@@ -130,10 +122,7 @@ export default function NotionStyleEditor() {
       style={{ minHeight: '100vh' }}
     >
       {blocks.map((block, i) => (
-        <div
-          key={block.id}
-          ref={el => (blockRefs.current[block.id] = el)}
-        >
+        <div key={block.id} ref={el => (blockRefs.current[block.id] = el)}>
           <Block
             block={block}
             autoFocus={block.id === focusBlockId}
@@ -147,7 +136,6 @@ export default function NotionStyleEditor() {
   );
 }
 
-// 개별 블록 컴포넌트
 function Block({ block, autoFocus, onInsert, onDelete, onCommit }) {
   const editor = useMemo(() => withReact(createEditor()), []);
   const contentRef = useRef(block.content);
@@ -159,10 +147,8 @@ function Block({ block, autoFocus, onInsert, onDelete, onCommit }) {
     const { element, attributes, children } = props;
     switch (element.type) {
       case 'code': {
-        // highlight.js로 언어 감지
         const codeString = Node.string(element);
         const { language = 'javascript' } = hljs.highlightAuto(codeString);
-        // Prism React Renderer로 렌더링
         return (
           <Highlight
             {...defaultProps}
@@ -172,13 +158,19 @@ function Block({ block, autoFocus, onInsert, onDelete, onCommit }) {
           >
             {({ className, style, tokens, getLineProps, getTokenProps }) => (
               <pre className={className} style={style} {...attributes}>
-                {tokens.map((line, i) => (
-                  <div key={i} {...getLineProps({ line, key: i })}>
-                    {line.map((token, key) => (
-                      <span key={key} {...getTokenProps({ token, key })} />
-                    ))}
-                  </div>
-                ))}
+                {tokens.map((line, i) => {
+                  const lp = getLineProps({ line });
+                  const { key: _k, ...rest } = lp;
+                  return (
+                    <div key={i} {...rest}>
+                      {line.map((token, j) => {
+                        const tp = getTokenProps({ token });
+                        const { key: _kk, ...tokProps } = tp;
+                        return <span key={j} {...tokProps} />;
+                      })}
+                    </div>
+                  );
+                })}
               </pre>
             )}
           </Highlight>
@@ -196,41 +188,29 @@ function Block({ block, autoFocus, onInsert, onDelete, onCommit }) {
         return <h1 {...attributes}>{children}</h1>;
       case 'heading-two':
         return <h2 {...attributes}>{children}</h2>;
-      case 'heading-three' :
-        return <h3 {...attributes}>{children}</h3>;
-      case 'heading-four':
-        return <h4 {...attributes}>{children}</h4>;
-      case 'heading-five':
-        return <h5 {...attributes}>{children}</h5>;
-      case 'heading-six':
-        return <h6 {...attributes}>{children}</h6>;
       default:
         return <p {...attributes}>{children}</p>;
     }
   }, []);
 
-  // Leaf 렌더러 (볼드/이탤릭/밑줄)
+  // 리프 렌더러
   const renderLeaf = useCallback(props => {
     let el = props.children;
     if (props.leaf.bold) el = <strong {...props.attributes}>{el}</strong>;
     if (props.leaf.italic) el = <em {...props.attributes}>{el}</em>;
-    if (props.leaf.underline)
-      el = <u {...props.attributes}>{el}</u>;
+    if (props.leaf.underline) el = <u {...props.attributes}>{el}</u>;
     return <span {...props.attributes}>{el}</span>;
   }, []);
 
-  // 변화 저장
   const handleChange = useCallback(val => {
     contentRef.current = val;
   }, []);
 
-  // 블러 시 커밋
   const handleBlur = useCallback(() => {
     onCommit(contentRef.current);
     setShowToolbar(false);
   }, [onCommit]);
 
-  // 툴바 업데이트
   const updateToolbar = useCallback(() => {
     const { selection } = editor;
     if (selection && Range.isExpanded(selection)) {
@@ -250,7 +230,6 @@ function Block({ block, autoFocus, onInsert, onDelete, onCommit }) {
     }
   }, [editor]);
 
-  // 자동 포커스 시 커서 이동
   useEffect(() => {
     if (autoFocus) {
       ReactEditor.focus(editor);
@@ -258,19 +237,26 @@ function Block({ block, autoFocus, onInsert, onDelete, onCommit }) {
     }
   }, [autoFocus, editor]);
 
-  // 선택 해제 시 툴바 숨김
   useEffect(() => {
     if (!editor.selection || Range.isCollapsed(editor.selection)) {
       setShowToolbar(false);
     }
   }, [editor.selection]);
 
-  // 키 이벤트 (Enter, Shift+Enter, Backspace, 단축키)
+  // 키 이벤트 핸들러
   const handleKeyDown = useCallback(
     e => {
+      const [inCode] = Editor.nodes(editor, {
+        match: n => SlateElement.isElement(n) && n.type === 'code',
+      });
+      if (inCode && e.key === 'Enter') {
+        e.preventDefault();
+        Editor.insertBreak(editor);
+        return;
+      }
+
       const text = Editor.string(editor, []);
       const sel = editor.selection;
-      // 빈 블록에서 Backspace → 삭제
       if (
         e.key === 'Backspace' &&
         sel &&
@@ -282,19 +268,16 @@ function Block({ block, autoFocus, onInsert, onDelete, onCommit }) {
         onDelete();
         return;
       }
-      // Shift+Enter 줄바꿈
       if (e.key === 'Enter' && e.shiftKey) {
         e.preventDefault();
         Editor.insertText(editor, '\n');
         return;
       }
-      // Enter 새 블록
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
         onInsert();
         return;
       }
-      // Ctrl/Cmd+B, I, U 마크 토글
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b') {
         e.preventDefault();
         const marks = Editor.marks(editor) || {};
@@ -324,11 +307,7 @@ function Block({ block, autoFocus, onInsert, onDelete, onCommit }) {
   );
 
   return (
-    <Slate
-      editor={editor}
-      initialValue={block.content}
-      onChange={handleChange}
-    >
+    <Slate editor={editor} initialValue={block.content} onChange={handleChange}>
       <div style={{ position: 'relative', marginBottom: '1rem' }}>
         {showToolbar && (
           <div
@@ -347,50 +326,17 @@ function Block({ block, autoFocus, onInsert, onDelete, onCommit }) {
           >
             <ToolbarMarkButton format="bold" icon={<Bold size={16} />} />
             <ToolbarMarkButton format="italic" icon={<Italic size={16} />} />
-            <ToolbarMarkButton
-              format="underline"
-              icon={<Underline size={16} />}
-            />
-            <ToolbarBlockButton
-              format="heading-one"
-              icon={<HeadingIcon size={16} />}
-            />
-            <ToolbarBlockButton
-              format="heading-two"
-              icon={<HeadingIcon size={14} />}
-            />
-            <ToolbarBlockButton
-              format="heading-three"
-              icon={<HeadingIcon size={12} />}
-            />
-            <ToolbarBlockButton
-              format={"heading-four"}
-              icon={<HeadingIcon size={10} />}
-            />
-            <ToolbarBlockButton
-              format="heading-five"
-              icon={<HeadingIcon size={8} />}
-            />
-            <ToolbarBlockButton
-              format="heading-six"
-              icon={<HeadingIcon size={6} />}
-            />
-            <ToolbarBlockButton
-              format="code"
-              icon={<CodeIcon size={16} />}
-            />
-            <ToolbarBlockButton
-              format="block-quote"
-              icon={<Quote size={16} />}
-            />
-            <ToolbarBlockButton
-              format="numbered-list"
-              icon={<ListOrdered size={16} />}
-            />
-            <ToolbarBlockButton
-              format="bulleted-list"
-              icon={<BulletedListIcon size={16} />}
-            />
+            <ToolbarMarkButton format="underline" icon={<Underline size={16} />} />
+            <ToolbarBlockButton format="heading-one" icon={<HeadingIcon size={16} />} />
+            <ToolbarBlockButton format="heading-two" icon={<HeadingIcon size={14} />} />
+            <ToolbarBlockButton format="heading-three" icon={<HeadingIcon size={12} />} />
+            <ToolbarBlockButton format="heading-four" icon={<HeadingIcon size={10} />} />
+            <ToolbarBlockButton format="heading-five" icon={<HeadingIcon size={8} />} />
+            <ToolbarBlockButton format="heading-six" icon={<HeadingIcon size={6} />} />
+            <ToolbarBlockButton format="code" icon={<CodeIcon size={16} />} />
+            <ToolbarBlockButton format="block-quote" icon={<Quote size={16} />} />
+            <ToolbarBlockButton format="numbered-list" icon={<ListOrdered size={16} />} />
+            <ToolbarBlockButton format="bulleted-list" icon={<BulletedListIcon size={16} />} />
           </div>
         )}
         <Editable
@@ -415,7 +361,6 @@ function Block({ block, autoFocus, onInsert, onDelete, onCommit }) {
   );
 }
 
-// 마크 버튼 컴포넌트
 const ToolbarMarkButton = ({ format, icon }) => {
   const editor = useSlate();
   const marks = Editor.marks(editor) || {};
@@ -442,7 +387,6 @@ const ToolbarMarkButton = ({ format, icon }) => {
   );
 };
 
-// 블록 버튼 컴포넌트
 const ToolbarBlockButton = ({ format, icon }) => {
   const editor = useSlate();
   const isActive = isBlockActive(editor, format);
