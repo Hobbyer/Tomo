@@ -23,8 +23,23 @@ export default function Block({block, autoFocus, onInsert, onDelete, onCommit}) 
     const { selection } = editor;
     if (selection && Range.isExpanded(selection)) {
       const domRange = ReactEditor.toDOMRange(editor, selection);
-      const rect = domRange.getBoundingClientRect();
-      setPos({ top: rect.top - 45 + window.scrollY, left: rect.left + window.scrollX });
+      const selectionRect = domRange.getBoundingClientRect();
+      const editableEl = ReactEditor.toDOMNode(editor, editor);
+
+      // 부모 컨테이너가 없으면 툴바를 숨깁니다.
+      if (!editableEl.parentElement) {
+        setShow(false);
+        return;
+      }
+
+      const containerRect = editableEl.parentElement.getBoundingClientRect();
+      const toolbarHeight = 40; // 툴바의 실제 높이(px)로 조정하세요.
+
+      // 부모 컨테이너를 기준으로 상대 위치를 계산합니다.
+      const top = selectionRect.top - containerRect.top - toolbarHeight;
+      const left = selectionRect.left - containerRect.left;
+
+      setPos({ top, left });
       setShow(true);
     } else {
       setShow(false);
@@ -98,7 +113,7 @@ export default function Block({block, autoFocus, onInsert, onDelete, onCommit}) 
   return (
     <Slate editor={editor} initialValue={block.content} onChange={handleChange}>
       <div style={{ position: 'relative', marginBottom: '1rem' }}>
-        {show && <Toolbar style={{ position: 'absolute', top: pos.top, left: pos.left }} />}
+        {show && <Toolbar style={{ position: 'absolute', top: pos.top, left: pos.left, zIndex: 1000 }} />}
         <Editable
           renderElement={props => <DefaultElement {...props} />}
           renderLeaf={props => <Leaf {...props} />}

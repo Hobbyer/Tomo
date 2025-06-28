@@ -2,11 +2,12 @@ import { createEditor, Editor, Element, Transforms } from "slate";
 import { withReact } from "slate-react";
 import { LIST_TYPES } from "./contents";
 import { deserialize } from "./deserialize";
+import { withImages } from "./withImages";
 
 
 // 에디터 생성 및 붙여넣기 처리
 export function createEditorWithPaste() {
-  const editor = withReact(createEditor());
+  let editor = withImages(withReact(createEditor()));
   const { insertData } = editor;
   editor.insertDate = data => {
     const html = data.getData("text/html");
