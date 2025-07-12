@@ -10,11 +10,8 @@ const Home = () => {
   const handleClose = () => setLoginFormShow(false);
   const handleShow = () => setLoginFormShow(true);
 
-  // const handleSocialLogin = (provider) => {
-  //   alert(`${provider} 로그인 시도 !`);
-  //   // 실제 OAuth 주소 연결 가능: window.location.href = `...`
-  // };
-
+  // 로그인 여부
+  const isLoggedIn = sessionStorage.getItem("accessToken") !== null;
   return (
     <div className="home-container">
       {/* 상단 헤더 */}
@@ -26,13 +23,26 @@ const Home = () => {
             alt="TOMO 로고"
             className="tomo-logo"
           />
-          <Button
+          { isLoggedIn ? 
+            <Button
+            variant="outline-danger"
+            className="login-btn"
+            onClick={() => {
+              sessionStorage.removeItem("accessToken");
+              sessionStorage.removeItem("refreshToken");
+              window.location.reload();
+            }}
+          >
+            로그아웃
+          </Button>
+          : <Button
             variant="outline-danger"
             className="login-btn"
             onClick={handleShow}
           >
             로그인
-          </Button>
+          </Button> }
+          
         </div>
 
         <h1>✨ TOMO ★ トモ ✨</h1>
