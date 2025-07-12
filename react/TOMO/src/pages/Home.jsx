@@ -45,7 +45,7 @@ const Home = () => {
           <div className="card">
             <h2>📄 새 문서 만들기</h2>
             <p>자유롭게 블록을 추가하고 기록해보세요!</p>
-            <Link to="/editor">
+            <Link to="/block-editor">
               <button>시작하기</button>
             </Link>
           </div>

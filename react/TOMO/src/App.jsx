@@ -10,6 +10,7 @@ import { useState } from "react";
 import DefaultLayout from "./components/layout/DefaultLayout";
 import Block from "./components/editor/Block";
 import NotionStyleEditor from "./components/editor/NotionStyleEditor";
+import OAuth2RedirectHandler from "./components/login/OAuth2RedirectHandler";
 
 function App() {
   const [showSidebar, setShowSidebar] = useState(false);
@@ -22,6 +23,7 @@ function App() {
             path="/"
             element={<Home />}
           />
+          <Route path="/oauth2/success" element={<OAuth2RedirectHandler />} />
           <Route path="/editor" element={<SlateEditor />} />
           <Route path="/block-editor" element={<NotionStyleEditor />} />
           <Route path="/my-docs" element={<div>내 문서 페이지</div>} />

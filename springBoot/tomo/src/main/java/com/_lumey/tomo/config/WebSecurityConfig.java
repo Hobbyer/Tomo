@@ -1,5 +1,8 @@
 package com._lumey.tomo.config;
 
+import com._lumey.tomo.member.service.CustomOAuth2User;
+import com._lumey.tomo.member.service.CustomOAuth2UserService;
+import com._lumey.tomo.oauth2.OAuth2SuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +20,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebSecurity
 @Component
 public class WebSecurityConfig implements WebMvcConfigurer {
+
+  private final CustomOAuth2UserService customOAuth2UserService;
+  private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
   @Override
   public void addCorsMappings(CorsRegistry registry) {
@@ -38,9 +44,16 @@ public class WebSecurityConfig implements WebMvcConfigurer {
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
         .authorizeHttpRequests(authorize -> authorize
-            .requestMatchers("/auth/**").permitAll()
+            .requestMatchers("/auth/**", "oauth2/**").permitAll()
             .anyRequest().permitAll()
-        );
+        )
+
+    .oauth2Login(oauth -> oauth
+        .userInfoEndpoint(userInfo -> userInfo
+            .userService(customOAuth2UserService)
+        )
+        .successHandler(oAuth2SuccessHandler)
+    );
 
     return http.build();
   }
