@@ -4,7 +4,17 @@ import { Button, Modal } from 'react-bootstrap';
 const SocialLoginButtons = ({ loginFormShow, handleClose }) => {
 
   const redirectTo = (provider) => {
-    window.location.href = `http://localhost:8080/oauth2/authorization/${provider}`;
+    // 플랫폼 이름 정리
+    const supportedProviders = ["google", "naver", "kakao"];
+    if (!supportedProviders.includes(provider)) {
+      console.error("지원하지 않는 소셜 로그인 플랫폼입니다.");
+      return;
+    }
+
+    // 리다이렉트 URL 생성
+    // 실제 환경에서는 백엔드 서버의 OAuth2 엔드포인트로 리다이렉트해야 합니다.
+    const redirectUrl = `http://localhost:8080/oauth2/authorization/${provider}`;
+    window.location.href = redirectUrl;
   };
 
   return (
